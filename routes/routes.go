@@ -12,7 +12,8 @@ func Handlers() *mux.Router {
 	r := mux.NewRouter().StrictSlash(true)
 	r.Use(CommonMiddleware)
 
-	r.HandleFunc("/api/articles/{id}", controllers.GetOneArticle).Methods("GET")
+	r.HandleFunc("/articles/{id}", controllers.GetOneArticle).Methods("GET")
+	r.HandleFunc("/articles", controllers.GetAllArticles).Methods("GET")
 
 	return r
 }

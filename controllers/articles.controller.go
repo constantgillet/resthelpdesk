@@ -5,40 +5,11 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/constantgillet/resthelpdesk/config"
 	"github.com/constantgillet/resthelpdesk/services"
 	"github.com/gorilla/mux"
 )
 
-func GetAllArticles() {
-
-	// db := config.DB()
-
-	// // Execute the query
-	// results, err := db.Query("SELECT id, title, content, created_at FROM articles")
-	// if err != nil {
-	//     panic(err.Error()) // proper error handling instead of panic in your app
-	// }
-
-	// var articles models.Articles
-
-	// for results.Next() {
-	//     var article models.Article
-	//     // for each row, scan the result into our tag composite object
-	//     err = results.Scan(&article.Id, &article.Title, &article.Content, &article.CreatedAt)
-	//     if err != nil {
-	//         panic(err.Error()) // proper error handling instead of panic in your app
-	//     }
-
-	// }
-
-	// defer db.Close()
-
-}
-
 func GetOneArticle(w http.ResponseWriter, r *http.Request) {
-
-	db := config.DB()
 
 	vars := mux.Vars(r)
 	articleId, err := strconv.Atoi(vars["id"])
@@ -58,10 +29,8 @@ func GetOneArticle(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Execute the query
+	// Get article
 	article, err := services.FindOneArticle(articleId)
-
-	defer db.Close()
 
 	if err != nil {
 		//panic(err.Error()) // proper error handling instead of panic in your app
@@ -80,6 +49,34 @@ func GetOneArticle(w http.ResponseWriter, r *http.Request) {
 
 	var resp = map[string]interface{}{
 		"data": article,
+	}
+
+	json.NewEncoder(w).Encode(resp)
+}
+
+func GetAllArticles(w http.ResponseWriter, r *http.Request) {
+
+	// Get articles
+	articles, err := services.FindAllArticle()
+
+	//If error while get articles
+	if err != nil {
+		//panic(err.Error()) // proper error handling instead of panic in your app
+
+		var resp = map[string]interface{}{
+			"error": map[string]interface{}{
+				"code": 500,
+				"name": "Internal server error",
+			},
+		}
+
+		w.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(w).Encode(resp)
+		return
+	}
+
+	var resp = map[string]interface{}{
+		"data": articles,
 	}
 
 	json.NewEncoder(w).Encode(resp)
