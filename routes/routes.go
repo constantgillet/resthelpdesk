@@ -15,6 +15,8 @@ func Handlers() *mux.Router {
 	r.HandleFunc("/articles/{id}", controllers.GetOneArticle).Methods("GET")
 	r.HandleFunc("/articles", controllers.GetAllArticles).Methods("GET")
 
+	r.HandleFunc("/categories", controllers.GetAllCategories).Methods("GET")
+
 	return r
 }
 
