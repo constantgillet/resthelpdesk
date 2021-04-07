@@ -56,8 +56,12 @@ func GetOneArticle(w http.ResponseWriter, r *http.Request) {
 
 func GetAllArticles(w http.ResponseWriter, r *http.Request) {
 
+	options := services.FindAllArticleOptions{
+		Categories: r.URL.Query().Get("category"),
+	}
+
 	// Get articles
-	articles, err := services.FindAllArticle()
+	articles, err := services.FindAllArticle(options)
 
 	//If error while get articles
 	if err != nil {

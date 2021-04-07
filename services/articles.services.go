@@ -27,18 +27,37 @@ func FindOneArticle(articleId int) (models.Article, error) {
 	return article, nil
 }
 
+type FindAllArticleOptions struct {
+	Categories string
+}
+
 // **
 // Function to get all articles
 // **
-func FindAllArticle() (models.Articles, error) {
+func FindAllArticle(options FindAllArticleOptions) (models.Articles, error) {
 
 	db := config.DB()
 	defer db.Close()
 
+	query := "SELECT id, title, content, category, created_at, updated_at FROM articles"
+	var args []interface{}
+
+	//If options is is not empty
+	if (FindAllArticleOptions{}) != options {
+
+		query = query + " WHERE"
+
+		if options.Categories != "" {
+			query = query + " category = ?"
+			args = append(args, options.Categories)
+		}
+
+	}
+
 	var articles models.Articles
 
 	// Execute the query
-	results, err := db.Query("SELECT id, title, content, created_at, updated_at FROM articles")
+	results, err := db.Query(query, args...)
 	if err != nil {
 		panic(err.Error()) // proper error handling instead of panic in your app
 	}
@@ -48,7 +67,7 @@ func FindAllArticle() (models.Articles, error) {
 		var article models.Article
 
 		// for each row, scan the result into our tag composite object
-		err = results.Scan(&article.Id, &article.Title, &article.Content, &article.CreatedAt, &article.UpdatedAt)
+		err = results.Scan(&article.Id, &article.Title, &article.Content, &article.Category, &article.CreatedAt, &article.UpdatedAt)
 		if err != nil {
 			panic(err.Error()) // proper error handling instead of panic in your app
 		}
