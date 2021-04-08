@@ -4,8 +4,8 @@ In this documentation you will find how to use the REST API
 
 ## Endpoints
 
-- [Articles](/articles.md) : Create , delete get all articles of the knowlege base
-- [Categories](/categories.md) : Create , delete get all categories of the knowlege base
+- [Articles](/documentation/articles.md) : Create , delete get all articles of the knowlege base
+- [Categories](/documentation/categories.md) : Create , delete get all categories of the knowlege base
 
 
 ## Status Codes
