@@ -58,6 +58,7 @@ func GetAllArticles(w http.ResponseWriter, r *http.Request) {
 
 	options := services.FindAllArticleOptions{
 		Categories: r.URL.Query().Get("category"),
+		Query:      r.URL.Query().Get("q"),
 	}
 
 	// Get articles
